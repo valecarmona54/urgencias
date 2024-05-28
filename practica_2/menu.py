@@ -1,6 +1,6 @@
 from urgencia import ColaPrioridad
 from urgencia import Paciente
-from urgencia import Nodo
+from urgencia import printTree
 
 def menu():
     urgencias = ColaPrioridad()
@@ -12,7 +12,8 @@ def menu():
         print("4. Consultar pacientes en espera")
         print("5. Consultar pacientes por triaje")
         print("6. Eliminar paciente")
-        print("7. Salir")
+        print("7. Imprimir arbol")
+        print("8. Salir")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
@@ -30,14 +31,17 @@ def menu():
                 genero = "Otro"
             else:
                 print("Opción no válida. Intente de nuevo.")
-                continue  # Regresa al inicio del bucle para pedir la opción de nuevo
+                continue  
 
             nombre = input("Ingrese nombre del paciente: ")
             edad = int(input("Ingrese edad del paciente: "))
             triaje = int(input("Ingrese triaje del paciente (1-5): "))
             paciente = Paciente(id, genero, nombre, edad, triaje)
             urgencias.registrar_paciente(paciente)
-            print("Paciente registrado exitosamente.")
+            nivel = urgencias.encolar_paciente(paciente)
+            print(f"Paciente {paciente.nombre} fue agregado en el nivel {nivel}")
+
+
 
         elif opcion == "2":
             proximo = urgencias.consultar_proximo()
@@ -84,6 +88,11 @@ def menu():
                 print("No se encontró un paciente con ese ID.")
 
         elif opcion == "7":
+            print("Árbol de pacientes:")
+            printTree(urgencias.raiz)
+
+
+        elif opcion == "8":
             print("Saliendo del sistema.")
 
 

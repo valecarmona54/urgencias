@@ -1,5 +1,4 @@
 
-
 class Paciente:
     def __init__(self, id, genero, nombre, edad, triaje):
         self.id = id
@@ -10,6 +9,8 @@ class Paciente:
 
     def __str__(self):
         return f"Id: {self.id}, genero: {self.genero}, nombre: {self.nombre}, edad: {self.edad}, triaje: {self.triaje}"
+
+
 
 class Nodo:
     def __init__(self, valor):
@@ -26,6 +27,17 @@ class Nodo:
             ret += self.hijo_derecho.__str__(level + 1)
         return ret
     
+
+def printTree(Node, prefix="", is_left=True):
+    if not Node:
+        return
+    if Node.hijo_derecho:
+        printTree(Node.hijo_derecho, prefix + ("│    " if is_left else "    "), False)
+    print(prefix + ("└── " if is_left else "┌── ") + str(Node.valor))
+    if Node.hijo_izquierdo:
+        printTree(Node.hijo_izquierdo, prefix + ("     " if is_left else "│   "), True)
+
+
 class ColaPrioridad:
     def __init__(self):
         self.raiz = None
@@ -40,13 +52,17 @@ class ColaPrioridad:
         for paciente in self.pacientes:
             self.registrar_paciente(paciente)
 
+            
     def registrar_paciente(self, paciente):
         nuevo_nodo = Nodo(paciente)
         if self.raiz is None:
             self.raiz = nuevo_nodo
+            return 0
         else:
             nodo_actual = self.raiz
+            nivel =0
             while True:
+                nivel += 1
                 if paciente.triaje < nodo_actual.valor.triaje:
                     if nodo_actual.hijo_izquierdo is None:
                         nodo_actual.hijo_izquierdo = nuevo_nodo
@@ -62,6 +78,7 @@ class ColaPrioridad:
                     else:
                         nodo_actual = nodo_actual.hijo_derecho
             self.comparar_pabre(nuevo_nodo)
+            print(nivel) 
 
     def comparar_pabre(self, nodo):
         while nodo.padre and nodo.valor.triaje < nodo.padre.valor.triaje:
